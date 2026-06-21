@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart IoT Cricket Farm | ระบบฟาร์มอัจฉริยะ</title>
+    
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Config for Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981', // Emerald
+                            600: '#059669',
+                            900: '#064e3b',
+                            accent: '#34d399' // Neon green
+                        },
+                        dark: {
+                            bg: '#0f172a', // slate-900
+                            card: '#1e293b', // slate-800
+                            border: '#334155' // slate-700
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #34d399 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-effect:hover {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Background Glow Effects -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-brand-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-blue-500 flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-bug text-white text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-wide text-white">Smart<span class="text-brand-accent">Farm</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#abstract" class="text-gray-300 hover:text-brand-accent transition font-medium text-sm uppercase tracking-wider">ภาพรวม</a>
+                    <a href="#methodology" class="text-gray-300 hover:text-brand-accent transition font-medium text-sm uppercase tracking-wider">ระบบ IoT</a>
+                    <a href="#results" class="text-gray-300 hover:text-brand-accent transition font-medium text-sm uppercase tracking-wider">ผลลัพธ์</a>
+                    <a href="#researchers" class="text-gray-300 hover:text-brand-accent transition font-medium text-sm uppercase tracking-wider">ทีมวิจัย</a>
+                    <a href="#abstract" class="bg-brand-500 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-brand-400 transition shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+                        อ่านงานวิจัยฉบับเต็ม
+                    </a>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-dark-bg border-b border-dark-border absolute w-full" id="mobile-menu">
+            <a href="#abstract" class="block px-6 py-4 text-gray-300 hover:bg-dark-card font-medium border-b border-dark-border/50">ภาพรวม</a>
+            <a href="#methodology" class="block px-6 py-4 text-gray-300 hover:bg-dark-card font-medium border-b border-dark-border/50">ระบบ IoT</a>
+            <a href="#results" class="block px-6 py-4 text-gray-300 hover:bg-dark-card font-medium border-b border-dark-border/50">ผลลัพธ์</a>
+            <a href="#researchers" class="block px-6 py-4 text-gray-300 hover:bg-dark-card font-medium">ทีมวิจัย</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-32 pb-20 md:pt-40 md:pb-24 relative flex items-center min-h-[95vh]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="text-left order-2 lg:order-1" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-accent text-xs font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+                        นวัตกรรมเพื่อเกษตรกรชุมชน
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+                        ตู้เลี้ยงจิ้งหรีดอัตโนมัติ<br/>ด้วยเทคโนโลยี <span class="text-gradient">IoT</span>
+                    </h1>
+                    <p class="mt-4 text-lg md:text-xl text-gray-400 mb-8 max-w-xl leading-relaxed">
+                        การประยุกต์ใช้อินเทอร์เน็ตของสรรพสิ่ง (Internet of Things) ในการพัฒนาระบบควบคุมสภาพแวดล้อมอัตโนมัติ ยกระดับชุมชนบ้านหนองใหญ่ จ.บุรีรัมย์ สู่สมาร์ตฟาร์มมิงอย่างยั่งยืน
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#methodology" class="bg-brand-500 text-white px-8 py-4 rounded-xl font-bold text-center hover:bg-brand-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] flex items-center justify-center gap-2">
+                            ดูการทำงานของระบบ <i class="fa-solid fa-microchip"></i>
+                        </a>
+                        <a href="#results" class="bg-transparent border border-gray-600 text-white px-8 py-4 rounded-xl font-bold text-center hover:bg-gray-800 hover:border-gray-400 transition-all flex items-center justify-center gap-2">
+                            สรุปผลวิจัย <i class="fa-solid fa-chart-line"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-10 flex items-center gap-6 text-sm text-gray-500 font-medium">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-dark-bg object-cover" src="images/EC_08-03_02.0 แบบฟอร์มประวัติผู้วิจัย  เปรม_image3.jpeg" alt="Dr. Prem" onerror="this.src='https://ui-avatars.com/api/?name=P&background=10B981&color=fff';">
+                            <img class="w-10 h-10 rounded-full border-2 border-dark-bg object-cover" src="images/CV กรกช ศิลปกอบ_image1.png" alt="Dr. Korakoch" onerror="this.src='https://ui-avatars.com/api/?name=K&background=3B82F6&color=fff';">
+                        </div>
+                        <p>วิจัยโดยผู้เชี่ยวชาญจาก <br/><span class="text-gray-300">มหาวิทยาลัยราชภัฏบุรีรัมย์</span></p>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="order-1 lg:order-2 relative" data-aos="zoom-in" data-aos-duration="1200">
+                    <div class="relative w-full aspect-[4/3] md:aspect-square max-w-lg mx-auto">
+                        <!-- Decorative elements behind image -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-500 to-blue-600 rounded-[2rem] transform rotate-6 opacity-20 blur-lg animate-pulse"></div>
+                        <div class="absolute inset-0 border border-white/10 rounded-[2rem] transform -rotate-3 bg-dark-card/50 backdrop-blur-sm z-0"></div>
+                        
+                        <!-- Main Image -->
+                        <img src="images/12 - ภาคผนวก_image1.jpeg" alt="Smart Farm Dashboard" class="absolute inset-0 w-full h-full object-cover rounded-[2rem] shadow-2xl z-10 border border-white/10 animate-float" onerror="this.src='images/09 - บทที่ 4 ผลการวิจัย_image1.jpeg';">
+                        
+                        <!-- Floating Glass Badge 1 -->
+                        <div class="absolute -top-6 -right-6 glass-card p-4 rounded-2xl z-20 flex items-center gap-3 animate-float" style="animation-delay: 1s;">
+                            <div class="w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-accent">
+                                <i class="fa-solid fa-temperature-arrow-up text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">ควบคุมอุณหภูมิ</p>
+                                <p class="text-lg font-bold text-white">25-35°C</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Glass Badge 2 -->
+                        <div class="absolute -bottom-8 -left-8 glass-card p-4 rounded-2xl z-20 flex items-center gap-3 animate-float" style="animation-delay: 2s;">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                <i class="fa-solid fa-mobile-screen text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">รองรับแอปพลิเคชัน</p>
+                                <p class="text-lg font-bold text-white">Blynk App</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
+            <a href="#abstract" class="text-gray-500 hover:text-white transition">
+                <i class="fa-solid fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Abstract / Overview -->
+    <section id="abstract" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-brand-accent font-bold tracking-[0.2em] text-xs uppercase mb-3">01 // ภาพรวมงานวิจัย</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">ยกระดับวิถีเกษตร ด้วยนวัตกรรม</h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-brand-500 to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 md:p-12" data-aos="fade-up" data-aos-delay="200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-bullseye text-brand-500"></i> วัตถุประสงค์หลัก
+                        </h4>
+                        <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                            <p>
+                                โครงการนี้ถูกพัฒนาขึ้นเพื่อ <span class="text-white font-medium">สร้างองค์ความรู้และออกแบบตู้เลี้ยงจิ้งหรีดอัตโนมัติ</span> ที่สามารถควบคุมสภาพแวดล้อม ทั้งอุณหภูมิและความชื้นได้อย่างแม่นยำผ่านเทคโนโลยี IoT
+                            </p>
+                            <p>
+                                นอกจากการพัฒนาระบบแล้ว หัวใจสำคัญคือการ <span class="text-white font-medium">ถ่ายทอดเทคโนโลยี</span> ให้กับกลุ่มเกษตรกร ชุมชนบ้านหนองใหญ่ เพื่อลดภาระงาน ลดต้นทุน และประเมินประสิทธิภาพการใช้งานจริงร่วมกับชุมชน (Participatory Action Research - PAR)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-dark-bg/50 border border-dark-border p-6 rounded-2xl hover:border-brand-500/50 transition-colors">
+                            <i class="fa-solid fa-temperature-half text-3xl text-rose-400 mb-4"></i>
+                            <h5 class="text-white font-bold mb-2">อุณหภูมิคงที่</h5>
+                            <p class="text-sm text-gray-400">ควบคุมผ่านเซนเซอร์ให้อยู่ในสภาวะที่เหมาะสมเสมอ</p>
+                        </div>
+                        <div class="bg-dark-bg/50 border border-dark-border p-6 rounded-2xl hover:border-blue-500/50 transition-colors">
+                            <i class="fa-solid fa-droplet text-3xl text-blue-400 mb-4"></i>
+                            <h5 class="text-white font-bold mb-2">ความชื้นสมดุล</h5>
+                            <p class="text-sm text-gray-400">สร้างระบบนิเวศน์จำลองที่เอื้อต่อการเจริญเติบโต</p>
+                        </div>
+                        <div class="bg-dark-bg/50 border border-dark-border p-6 rounded-2xl hover:border-purple-500/50 transition-colors">
+                            <i class="fa-solid fa-wifi text-3xl text-purple-400 mb-4"></i>
+                            <h5 class="text-white font-bold mb-2">IoT เชื่อมต่อ</h5>
+                            <p class="text-sm text-gray-400">ดูข้อมูลเรียลไทม์ผ่านมือถือได้ทุกที่ทุกเวลา</p>
+                        </div>
+                        <div class="bg-dark-bg/50 border border-dark-border p-6 rounded-2xl hover:border-amber-500/50 transition-colors">
+                            <i class="fa-solid fa-users text-3xl text-amber-400 mb-4"></i>
+                            <h5 class="text-white font-bold mb-2">สร้างรายได้ชุมชน</h5>
+                            <p class="text-sm text-gray-400">ยกระดับผลผลิตและคุณภาพชีวิตเกษตรกร</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology -->
+    <section id="methodology" class="py-24 relative bg-dark-card/30 border-y border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-blue-400 font-bold tracking-[0.2em] text-xs uppercase mb-3">02 // วิธีดำเนินการ</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">สถาปัตยกรรมระบบ IoT</h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <!-- Text Flow -->
+                <div class="lg:w-1/2 space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-500 before:via-blue-500 before:to-transparent">
+                    
+                    <!-- Step 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-dark-bg bg-brand-500 text-white shadow shadow-brand-500/50 absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10 font-bold">1</div>
+                        <div class="ml-14 md:ml-0 md:w-5/12 glass-card p-6 rounded-2xl glow-effect transition-all">
+                            <h4 class="text-xl font-bold text-white mb-2">Microcontroller</h4>
+                            <p class="text-gray-400 text-sm">บอร์ด NodeMCU ESP8266 ทำหน้าที่เป็นสมองกลสั่งการและประมวลผลข้อมูล พร้อมโมดูล Wi-Fi ในตัว</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-dark-bg bg-blue-500 text-white shadow shadow-blue-500/50 absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10 font-bold">2</div>
+                        <div class="ml-14 md:ml-0 md:w-5/12 glass-card p-6 rounded-2xl glow-effect transition-all">
+                            <h4 class="text-xl font-bold text-white mb-2">Smart Sensors</h4>
+                            <p class="text-gray-400 text-sm">ติดตั้งเซนเซอร์ DHT11 ตรวจวัดค่าอุณหภูมิและความชื้นภายในตู้เลี้ยงอย่างแม่นยำตลอด 24 ชม.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-dark-bg bg-purple-500 text-white shadow shadow-purple-500/50 absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10 font-bold">3</div>
+                        <div class="ml-14 md:ml-0 md:w-5/12 glass-card p-6 rounded-2xl glow-effect transition-all">
+                            <h4 class="text-xl font-bold text-white mb-2">Relay Control</h4>
+                            <p class="text-gray-400 text-sm">โมดูลรีเลย์ควบคุมการเปิด-ปิดอุปกรณ์ไฟฟ้าอัตโนมัติ เช่น พัดลมระบายอากาศและหลอดไฟอินฟราเรด</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group" data-aos="fade-up" data-aos-delay="400">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-dark-bg bg-amber-500 text-white shadow shadow-amber-500/50 absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10 font-bold">4</div>
+                        <div class="ml-14 md:ml-0 md:w-5/12 glass-card p-6 rounded-2xl glow-effect transition-all">
+                            <h4 class="text-xl font-bold text-white mb-2">Blynk Dashboard</h4>
+                            <p class="text-gray-400 text-sm">เชื่อมต่อข้อมูลขึ้น Cloud และแสดงผลบนแอปพลิเคชัน Blynk บนมือถือ ให้เกษตรกรตรวจสอบและสั่งการได้ทันที</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagram Images -->
+                <div class="lg:w-1/2 grid grid-cols-1 gap-6" data-aos="fade-left">
+                    <div class="glass-card p-4 rounded-3xl group overflow-hidden">
+                        <img src="images/08 - บทที่ 3 วิธีดำเนินการวิจัย_image1.png" alt="Architecture Diagram" class="w-full h-auto rounded-xl object-contain bg-white/5 group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x300/1e293b/ffffff?text=Architecture+Diagram';">
+                        <p class="text-center text-sm text-gray-400 mt-3 font-medium">ภาพจำลองสถาปัตยกรรมระบบ</p>
+                    </div>
+                    <div class="glass-card p-4 rounded-3xl group overflow-hidden">
+                        <img src="images/08 - บทที่ 3 วิธีดำเนินการวิจัย_image4.png" alt="System Flowchart" class="w-full h-auto rounded-xl object-contain bg-white/5 group-hover:scale-105 transition duration-500" onerror="this.src='images/08 - บทที่ 3 วิธีดำเนินการวิจัย_image2.png';">
+                        <p class="text-center text-sm text-gray-400 mt-3 font-medium">กระบวนการทำงานของระบบควบคุม</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-amber-400 font-bold tracking-[0.2em] text-xs uppercase mb-3">03 // ผลการทดลอง</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">ประสิทธิภาพการใช้งานจริง</h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-amber-500 to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <!-- Stat 1 -->
+                <div class="glass-card p-6 rounded-2xl relative overflow-hidden" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="absolute -right-4 -top-4 text-white/5 text-8xl"><i class="fa-solid fa-temperature-three-quarters"></i></div>
+                    <p class="text-gray-400 text-sm font-medium mb-1">ควบคุมอุณหภูมิ</p>
+                    <h4 class="text-3xl font-bold text-white mb-1">25-35<span class="text-xl text-brand-500">°C</span></h4>
+                    <p class="text-xs text-brand-400"><i class="fa-solid fa-check-circle"></i> ทำงานอัตโนมัติแม่นยำ</p>
+                </div>
+                
+                <!-- Stat 2 -->
+                <div class="glass-card p-6 rounded-2xl relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="absolute -right-4 -top-4 text-white/5 text-8xl"><i class="fa-solid fa-star"></i></div>
+                    <p class="text-gray-400 text-sm font-medium mb-1">ประสิทธิภาพ (ผู้เชี่ยวชาญ)</p>
+                    <h4 class="text-3xl font-bold text-white mb-1">4.47<span class="text-xl text-amber-500"> / 5</span></h4>
+                    <p class="text-xs text-amber-400"><i class="fa-solid fa-chart-bar"></i> S.D. = 0.54 (ระดับดี)</p>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="glass-card p-6 rounded-2xl relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="absolute -right-4 -top-4 text-white/5 text-8xl"><i class="fa-solid fa-heart"></i></div>
+                    <p class="text-gray-400 text-sm font-medium mb-1">ความพึงพอใจ (เกษตรกร)</p>
+                    <h4 class="text-3xl font-bold text-white mb-1">4.49<span class="text-xl text-rose-500"> / 5</span></h4>
+                    <p class="text-xs text-rose-400"><i class="fa-solid fa-users"></i> จากกลุ่มตัวอย่าง 50 คน</p>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="glass-card p-6 rounded-2xl relative overflow-hidden" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="absolute -right-4 -top-4 text-white/5 text-8xl"><i class="fa-solid fa-clock"></i></div>
+                    <p class="text-gray-400 text-sm font-medium mb-1">การลดภาระงาน</p>
+                    <h4 class="text-3xl font-bold text-white mb-1">100<span class="text-xl text-blue-500">%</span></h4>
+                    <p class="text-xs text-blue-400"><i class="fa-solid fa-arrow-trend-down"></i> ลดเวลาดูแลฟาร์มได้จริง</p>
+                </div>
+            </div>
+
+            <!-- Image Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="rounded-2xl overflow-hidden glass-card group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-56 overflow-hidden">
+                        <img src="images/09 - บทที่ 4 ผลการวิจัย_image1.jpeg" alt="Blynk Interface" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x300/1e293b/ffffff?text=App+Interface';">
+                    </div>
+                    <div class="p-5">
+                        <h5 class="text-white font-bold text-lg mb-1">หน้าจอแอปพลิเคชัน</h5>
+                        <p class="text-sm text-gray-400">แดชบอร์ดแสดงผลอุณหภูมิและความชื้นแบบเรียลไทม์บนสมาร์ตโฟน</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl overflow-hidden glass-card group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-56 overflow-hidden">
+                        <img src="images/09 - บทที่ 4 ผลการวิจัย_image2.jpeg" alt="Hardware Setup" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/400x300/1e293b/ffffff?text=Hardware+Setup';">
+                    </div>
+                    <div class="p-5">
+                        <h5 class="text-white font-bold text-lg mb-1">การติดตั้งเซนเซอร์และฮาร์ดแวร์</h5>
+                        <p class="text-sm text-gray-400">วงจรภายในและเซนเซอร์ที่ติดตั้งลงในตู้เลี้ยงจิ้งหรีดจริง</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl overflow-hidden glass-card group cursor-pointer" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-56 overflow-hidden">
+                        <img src="images/09 - บทที่ 4 ผลการวิจัย_image17.jpeg" alt="Community Transfer" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='images/12 - ภาคผนวก_image10.jpeg';">
+                    </div>
+                    <div class="p-5">
+                        <h5 class="text-white font-bold text-lg mb-1">การถ่ายทอดเทคโนโลยีสู่ชุมชน</h5>
+                        <p class="text-sm text-gray-400">เกษตรกรบ้านหนองใหญ่ได้รับการอบรมและทดลองใช้งานระบบจริง</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Researcher Profiles -->
+    <section id="researchers" class="py-24 relative bg-dark-card/30 border-t border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-purple-400 font-bold tracking-[0.2em] text-xs uppercase mb-3">04 // ทีมวิจัย</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">คณะผู้ดำเนินโครงการ</h3>
+                <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Researcher 1 -->
+                <div class="glass-card rounded-3xl p-8 relative mt-12 hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                        <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-brand-400 to-blue-500">
+                            <img src="images/EC_08-03_02.0 แบบฟอร์มประวัติผู้วิจัย  เปรม_image3.jpeg" alt="Dr. Prem" class="w-full h-full rounded-full object-cover border-4 border-dark-card" onerror="this.src='https://ui-avatars.com/api/?name=Prem+E&background=1e293b&color=10b981&size=200';">
+                        </div>
+                    </div>
+                    <div class="pt-12 text-center">
+                        <h4 class="text-xl font-bold text-white mb-1">ผศ. ดร.เปรม อิงคเวชชากุล</h4>
+                        <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-semibold mb-4">หัวหน้าโครงการ</span>
+                        
+                        <div class="text-gray-400 text-sm space-y-2 text-left mt-4 pt-4 border-t border-white/5">
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-briefcase text-brand-500 w-4"></i> สาขาวิชาเทคโนโลยีสารสนเทศ</p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-graduation-cap text-brand-500 w-4"></i> Ph.D. (Information Technology)</p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-envelope text-brand-500 w-4"></i> prem.ev@bru.ac.th</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Researcher 2 -->
+                <div class="glass-card rounded-3xl p-8 relative mt-12 hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                        <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-blue-400 to-indigo-500">
+                            <img src="https://ui-avatars.com/api/?name=Kittikoon+B&background=1e293b&color=3b82f6&size=200" alt="Mr. Kittikoon" class="w-full h-full rounded-full object-cover border-4 border-dark-card">
+                        </div>
+                    </div>
+                    <div class="pt-12 text-center">
+                        <h4 class="text-xl font-bold text-white mb-1">นายกิตติคุณ บุญเกตุ</h4>
+                        <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold mb-4">ผู้ร่วมวิจัย</span>
+                        
+                        <div class="text-gray-400 text-sm space-y-2 text-left mt-4 pt-4 border-t border-white/5">
+                            <p class="flex items-start gap-3"><i class="fa-solid fa-briefcase text-blue-500 w-4 mt-1"></i> <span>สาขาวิชาสถิติและวิทยาการสารสนเทศ (รองคณบดี)</span></p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-graduation-cap text-blue-500 w-4"></i> M.Sc. (Applied Statistics)</p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-envelope text-blue-500 w-4"></i> kittikoon.bk@bru.ac.th</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Researcher 3 -->
+                <div class="glass-card rounded-3xl p-8 relative mt-12 hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                        <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-purple-400 to-pink-500">
+                            <img src="images/CV กรกช ศิลปกอบ_image1.png" alt="Dr. Korakoch" class="w-full h-full rounded-full object-cover border-4 border-dark-card" onerror="this.src='https://ui-avatars.com/api/?name=Korakoch+S&background=1e293b&color=c084fc&size=200';">
+                        </div>
+                    </div>
+                    <div class="pt-12 text-center">
+                        <h4 class="text-xl font-bold text-white mb-1">อ. ดร.กรกช ศิลปกอบ</h4>
+                        <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold mb-4">ผู้ร่วมวิจัย</span>
+                        
+                        <div class="text-gray-400 text-sm space-y-2 text-left mt-4 pt-4 border-t border-white/5">
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-briefcase text-purple-500 w-4"></i> กลุ่มวิชาทดสอบและวิจัยการศึกษา</p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-graduation-cap text-purple-500 w-4"></i> Ph.D. (Applied Statistics)</p>
+                            <p class="flex items-center gap-3"><i class="fa-solid fa-envelope text-purple-500 w-4"></i> korakoch.sk@bru.ac.th</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-border bg-dark-bg pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-blue-500 flex items-center justify-center">
+                            <i class="fa-solid fa-bug text-white text-sm"></i>
+                        </div>
+                        <span class="font-bold text-xl text-white">SmartFarm IoT</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-sm leading-relaxed">
+                        งานวิจัย "การประยุกต์ใช้เทคโนโลยีอินเทอร์เน็ตของสรรพสิ่ง ในการพัฒนาตู้เลี้ยงจิ้งหรีดอัตโนมัติ สำหรับกลุ่มเกษตรกร ชุมชนบ้านหนองใหญ่ อำเภอสตึก จังหวัดบุรีรัมย์"
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:items-end justify-center">
+                    <h5 class="text-white font-semibold mb-4">ได้รับการสนับสนุนจาก</h5>
+                    <div class="glass-card p-5 rounded-xl inline-block w-full md:w-auto">
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-hands-holding-circle text-brand-500 text-lg"></i>
+                                สำนักงานคณะกรรมการส่งเสริมวิทยาศาสตร์ วิจัยและนวัตกรรม (สกสว.)
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-building-columns text-blue-500 text-lg"></i>
+                                มหาวิทยาลัยราชภัฏบุรีรัมย์ (พ.ศ. 2568)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>&copy; 2568 มหาวิทยาลัยราชภัฏบุรีรัมย์ ลิขสิทธิ์ของมหาวิทยาลัยราชภัฏบุรีรัมย์</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-brand-400 transition">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#" class="hover:text-brand-400 transition">ติดต่อเรา</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation
+        AOS.init({
+            once: true,
+            offset: 50,
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-xl', 'bg-dark-bg/90');
+                nav.classList.remove('glass-nav');
+            } else {
+                nav.classList.remove('shadow-xl', 'bg-dark-bg/90');
+                nav.classList.add('glass-nav');
+            }
+        });
+
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
